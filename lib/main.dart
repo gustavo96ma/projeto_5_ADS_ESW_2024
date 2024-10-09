@@ -4,9 +4,18 @@ void main() {
   runApp(const MainApp());
 }
 
-class MainApp extends StatelessWidget {
+class MainApp extends StatefulWidget {
   const MainApp({super.key});
 
+  @override
+  State<MainApp> createState() => _MainAppState();
+}
+
+class _MainAppState extends State<MainApp> {
+  bool _modoLogin = true;
+  final TextEditingController _controladorEmail = TextEditingController();
+  final TextEditingController _controladorSenha = TextEditingController();
+  final TextEditingController _controladorNome = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -27,44 +36,79 @@ class MainApp extends StatelessWidget {
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
                     children: [
-                      const TextField(
+                      TextField(
+                        controller: _controladorEmail,
                         cursorColor: Colors.grey,
-                        style: TextStyle(color: Colors.black),
-                        decoration: InputDecoration(
+                        style: const TextStyle(color: Colors.black),
+                        decoration: const InputDecoration(
                           label: Text('Email'),
                           focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.black)),
                           border: OutlineInputBorder(),
                         ),
                       ),
-                      const SizedBox(height: 12.5,),
-                      const TextField(
+                      const SizedBox(
+                        height: 12.5,
+                      ),
+                      TextField(
+                        controller: _controladorSenha,
                         cursorColor: Colors.grey,
-                        style: TextStyle(color: Colors.black),
-                        decoration: InputDecoration(
+                        style: const TextStyle(color: Colors.black),
+                        decoration: const InputDecoration(
                           label: Text('Senha'),
                           focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.black)),
                           border: OutlineInputBorder(),
                         ),
                       ),
-                      const SizedBox(
-                        height: 50,
-                      ),
+                      if (_modoLogin)
+                        const SizedBox(
+                          height: 50,
+                        ),
+                      if (!_modoLogin)
+                        const SizedBox(
+                          height: 12.5,
+                        ),
+                      if (!_modoLogin)
+                        TextField(
+                          controller: _controladorNome,
+                          cursorColor: Colors.grey,
+                          style: const TextStyle(color: Colors.black),
+                          decoration: const InputDecoration(
+                            label: Text('Nome'),
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black)),
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                      if (!_modoLogin)
+                        const SizedBox(
+                          height: 25,
+                        ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           TextButton.icon(
-                            style: ButtonStyle(
-                              foregroundColor:
-                                  const WidgetStatePropertyAll(Colors.white),
-                              backgroundColor:
-                                  WidgetStatePropertyAll(Colors.green[400]),
-                            ),
-                            onPressed: () {},
-                            label: const Text('Login'),
-                            icon: const Icon(Icons.login),
-                          ),
+                              style: ButtonStyle(
+                                foregroundColor:
+                                    const WidgetStatePropertyAll(Colors.white),
+                                backgroundColor:
+                                    WidgetStatePropertyAll(Colors.green[400]),
+                              ),
+                              onPressed: () {
+                                print(_controladorEmail);
+                                print(_controladorSenha);
+                                print(_controladorNome);
+                                setState(() {
+                                  _modoLogin = true;
+                                });
+                              },
+                              label: _modoLogin
+                                  ? const Text('Login')
+                                  : const Text('Voltar'),
+                              icon: _modoLogin
+                                  ? const Icon(Icons.login)
+                                  : const Icon(Icons.arrow_back)),
                           const SizedBox(width: 6.25),
                           TextButton.icon(
                             style: ButtonStyle(
@@ -73,9 +117,17 @@ class MainApp extends StatelessWidget {
                               backgroundColor:
                                   WidgetStatePropertyAll(Colors.green[400]),
                             ),
-                            onPressed: () {},
-                            label: const Text('Cadastrar-se'),
-                            icon: const Icon(Icons.person_add_alt),
+                            onPressed: () {
+                              setState(() {
+                                _modoLogin = false;
+                              });
+                            },
+                            label: _modoLogin
+                                ? const Text('Cadastrar-se')
+                                : const Text('Cadastrar'),
+                            icon: _modoLogin
+                                ? const Icon(Icons.person_add_alt)
+                                : const Icon(Icons.check_circle_outline),
                           ),
                         ],
                       ),
@@ -83,7 +135,6 @@ class MainApp extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 50),
             ],
           ),
         ),
@@ -91,4 +142,3 @@ class MainApp extends StatelessWidget {
     );
   }
 }
-
