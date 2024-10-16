@@ -1,6 +1,14 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+import 'firebase_options.dart';
+
+final _firebaseAuth = FirebaseAuth.instance;
+void main() async {
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MainApp());
 }
 
@@ -95,10 +103,19 @@ class _MainAppState extends State<MainApp> {
                                 backgroundColor:
                                     WidgetStatePropertyAll(Colors.green[400]),
                               ),
-                              onPressed: () {
-                                print(_controladorEmail);
-                                print(_controladorSenha);
-                                print(_controladorNome);
+                              onPressed: () async {
+                                try {
+                                  if (_modoLogin) {
+                                    final usuario = await _firebaseAuth
+                                        .signInWithEmailAndPassword(
+                                            email: _controladorEmail.text,
+                                            password: _controladorSenha.text);
+                                    print(usuario.user);
+                                  }
+                                } catch (error) {
+                                  print(error);
+                                }
+
                                 setState(() {
                                   _modoLogin = true;
                                 });
@@ -118,6 +135,16 @@ class _MainAppState extends State<MainApp> {
                                   WidgetStatePropertyAll(Colors.green[400]),
                             ),
                             onPressed: () {
+                              try {
+                                if (!_modoLogin) {
+                                  _firebaseAuth.createUserWithEmailAndPassword(
+                                      email: _controladorEmail.text,
+                                      password: _controladorSenha.text);
+                                }
+                              } catch (error) {
+                                print(error);
+                              }
+
                               setState(() {
                                 _modoLogin = false;
                               });

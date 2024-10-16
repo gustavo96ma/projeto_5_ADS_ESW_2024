@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "948284952873",
+    "project_id": "app-unicv-ca307",
+    "storage_bucket": "app-unicv-ca307.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:948284952873:android:87bb6b8bf87ac93ea2e738",
+        "android_client_info": {
+          "package_name": "com.example.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCCZTtc7zS6Cj3Fc7nEHFa_Lm6F0nW6PZ0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
