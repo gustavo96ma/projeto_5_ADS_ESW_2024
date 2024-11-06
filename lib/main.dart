@@ -31,7 +31,6 @@ class MeuApp extends StatelessWidget {
               );
             }
 
-            print(snapshot.data);
             if (snapshot.hasData){
               return const PaginaListaChats();
             }

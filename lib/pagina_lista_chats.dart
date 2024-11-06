@@ -2,15 +2,22 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+import 'pagina_chat.dart';
+
 class PaginaListaChats extends StatelessWidget {
   const PaginaListaChats({super.key});
 
+  Future<List<String>> _pegaListaDeChats() async {
+    final listaDeChats =
+        await FirebaseFirestore.instance.collection('listaDeChats').get();
+
+    return listaDeChats.docs.map((doc) => doc.id).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final collection =
-        FirebaseFirestore.instance.collection('listaDeChats').snapshots();
-    return StreamBuilder(
-        stream: collection,
+    return FutureBuilder<List<String>>(
+        future: _pegaListaDeChats(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
@@ -18,7 +25,7 @@ class PaginaListaChats extends StatelessWidget {
             );
           }
 
-          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+          if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return const Center(
               child: Text('Nenhum chat foi encontrado! Verifique!'),
             );
@@ -30,8 +37,7 @@ class PaginaListaChats extends StatelessWidget {
             );
           }
 
-          print(snapshot.data!.docs);
-          final listaChats = snapshot.data!.docs;
+          final listaChats = snapshot.data!;
 
           return Scaffold(
               appBar: AppBar(
@@ -42,14 +48,23 @@ class PaginaListaChats extends StatelessWidget {
                 ],
                 title: const Text('Página Lista de Chats'),
               ),
-              body: ListView(
-                children: snapshot.data!.docs.map((DocumentSnapshot document) {
-                  Map<String, dynamic> data =
-                      document.data()! as Map<String, dynamic>;
+              body: ListView.builder(
+                itemCount: listaChats.length,
+                itemBuilder: (context, index) {
                   return ListTile(
-                    title: Text(data['chat']),
+                    tileColor: Colors.blue,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              PaginaChat(idSala: listaChats[index]),
+                        ),
+                      );
+                    },
+                    title: Text(listaChats[index]),
                   );
-                }).toList(),
+                },
               ));
         });
   }
