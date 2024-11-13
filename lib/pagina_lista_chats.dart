@@ -9,7 +9,7 @@ class PaginaListaChats extends StatelessWidget {
 
   Future<List<String>> _pegaListaDeChats() async {
     final listaDeChats =
-        await FirebaseFirestore.instance.collection('listaDeChats').get();
+        await FirebaseFirestore.instance.collection('chats').get();
 
     return listaDeChats.docs.map((doc) => doc.id).toList();
   }
