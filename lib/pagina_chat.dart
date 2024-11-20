@@ -79,8 +79,25 @@ class _PaginaChatState extends State<PaginaChat> {
                         ),
                       ),
                       IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.send),
+                        onPressed: () async {
+                          final mensagem = await FirebaseFirestore.instance
+                              .collection('chats')
+                              .doc(widget.idSala)
+                              .collection('chat')
+                              .add({
+                            'conteudo': _controladorInput.text,
+                            'criadoEm': Timestamp.now(),
+                            'email': FirebaseAuth.instance.currentUser!.email
+                          });
+
+                          if (mensagem.id.isNotEmpty) {
+                            _controladorInput.clear();
+                          }
+                        },
+                        icon: const Icon(
+                          Icons.send,
+                          color: Colors.blue,
+                        ),
                       )
                     ],
                   ),
